@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const propertyController = require('../controllers/propertyController');
-const validateProperty = require('../middleware/validateProperty');
+const propertyController = require('../controllers/propertyControllers');
+const validateProperty = require('../middleware/validdateProperty');
 
 router.post('/', validateProperty, propertyController.createProperty);
 router.get('/', propertyController.getAllProperties);
