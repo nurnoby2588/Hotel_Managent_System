@@ -4,20 +4,20 @@ const { generateToken } = require('../middleware/auth');
 const registerUser = async (req, res) => {
   try {
     const { email, password, role } = req.body;
-    console.log("register",req.body)
+    
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-        console.log("register existingUser")
+        
       return res.status(400).json({ message: 'User already exists' });
     }
 
     // Create new user
     const user = new User({ email, password, role });
-    console.log("register new - 18", user)
+    
     await user.save();
-    console.log("register new", user)
+   
     res.status(201).json({
       _id: user._id,
       email: user.email,
