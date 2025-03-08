@@ -32,10 +32,10 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    // console.log("login",req.body)
+    
     // Check if user exists
     const user = await User.findOne({ email });
-    console.log("login",user)
+  
     if (!user) {
       console.log("no user")
       return res.status(400).json({ message: 'Invalid email or password' });
