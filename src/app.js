@@ -1,11 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 const connectDB = require('./config/db');
 const propertyRoutes = require('./routes/propertyRoutes');
-const errorHandler = require('./middleware/errorHandler');
 const userRoutes = require('./routes/userRoutes');
-const path = require('path');
+const errorHandler = require('./middleware/errorHandler');
 
 // Load environment variables
 dotenv.config();
@@ -13,31 +13,34 @@ dotenv.config();
 // Initialize express app
 const app = express();
 
-// Connect to MongoDB
-connectDB();
-
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Root endpoint
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
     console.log('Root endpoint accessed');
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    await connectDB(); // ✅ Connect to MongoDB on each request
+    res.send({ message: "Hotel management" });
 });
 
 // Routes
-app.use('/api/properties', propertyRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/properties', async (req, res, next) => {
+    await connectDB(); // ✅ Ensure DB connection
+    next();
+}, propertyRoutes);
+
+app.use('/api/users', async (req, res, next) => {
+    await connectDB(); // ✅ Ensure DB connection
+    next();
+}, userRoutes);
 
 // Error handling middleware
 app.use(errorHandler);
 
-// Start server
-const PORT = process.env.PORT || 5003
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on port ${PORT}`);
-});
-
-module.exports = app;
+// Export the app as a Vercel function
+module.exports = async (req, res) => {
+    await connectDB(); // ✅ Ensure DB connection
+    return app(req, res);
+};

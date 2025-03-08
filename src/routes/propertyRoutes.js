@@ -1,10 +1,13 @@
+
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/userController');
-const { auth } = require('../middleware/auth');
+const propertyController = require('../controllers/propertyControllers');
+const validateProperty = require('../middleware/validdateProperty');
 
-router.post('/register', userController.registerUser); // Register User
-router.post('/login', userController.loginUser); // Login User
-router.get('/profile', auth, userController.getUserProfile); // Get User Profile (Protected Route)
+router.post('/', validateProperty, propertyController.createProperty);
+router.get('/', propertyController.getAllProperties);
+router.get('/:id', propertyController.getProperty);
+router.put('/:id', validateProperty, propertyController.updateProperty);
+router.delete('/:id', propertyController.deleteProperty);
 
 module.exports = router;
