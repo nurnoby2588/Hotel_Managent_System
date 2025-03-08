@@ -1,7 +1,7 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+const jwt = require('jsonwebtoken');
+const User = require('../models/Users');
 
-export const auth = async (req, res, next) => {
+const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     
@@ -24,10 +24,15 @@ export const auth = async (req, res, next) => {
   }
 };
 
-export const generateToken = (userId) => {
+const generateToken = (userId) => {
   return jwt.sign(
     { userId },
     process.env.JWT_SECRET,
     { expiresIn: '24h' }
   );
+};
+
+module.exports = {
+  auth,
+  generateToken
 };

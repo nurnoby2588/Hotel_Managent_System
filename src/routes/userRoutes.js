@@ -8,3 +8,4 @@ router.post('/login', userController.loginUser); // Login User
 router.get('/profile', auth, userController.getUserProfile); // Get User Profile (Protected Route)
 
 module.exports = router;
+
